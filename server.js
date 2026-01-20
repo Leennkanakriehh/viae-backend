@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
 const cors = require("cors");
 const pool = require("./db");
 const userRoutes = require("./routes/users.routes")
@@ -10,6 +11,7 @@ const rideRoutes = require("./routes/rides.routes");
 dotenv.config();
 
 const app = express();
+dotenv.config();
 
 app.use(cors());
 app.use(express.json());

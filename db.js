@@ -1,13 +1,8 @@
 const { Pool } = require('pg');
+require("dotenv").config();
 
 const pool = new Pool({
-    host: "localhost",
-    user: "postgres",
-    port: 5432,
-    password: "0000",
-    database: "viae_db",
+    connectionString: process.env.DATABASE_URL,
 });
-
-pool.connect().then(() => console.log("connected"));
 
 module.exports = pool;
