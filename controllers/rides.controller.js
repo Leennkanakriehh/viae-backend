@@ -34,6 +34,32 @@ exports.createRide = async (req, res) => {
     }
 }
 
+//fetch rides
+exports.getRides = async (req, res) => {
+    try {
+        const result = await pool.query(`
+      SELECT
+        r.id,
+        r.ride_code,
+        r.pickup_location,
+        r.destination,
+        r.status,
+        r.requested_at,
+        r.driver_id,
+        d.username AS driver_name
+      FROM rides r
+      LEFT JOIN drivers d ON r.driver_id = d.id
+      ORDER BY r.requested_at DESC
+    `);
+
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
 // assign driver
 exports.assignDriverToRide = async (req, res) => {
     try {

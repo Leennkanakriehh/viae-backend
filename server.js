@@ -2,11 +2,12 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const cors = require("cors");
-const pool = require("./db");
+
 const userRoutes = require("./routes/users.routes")
 const driverRoutes = require("./routes/drivers.routes");
 const vehicleRoutes = require("./routes/vehicles.routes")
 const rideRoutes = require("./routes/rides.routes");
+const adminRoutes = require("./routes/admin.routes")
 
 dotenv.config();
 
@@ -22,12 +23,13 @@ app.use("/api/users", userRoutes);
 app.use("/api/drivers", driverRoutes);
 app.use("/api/vehicles", vehicleRoutes)
 app.use("/api/rides", rideRoutes);
+app.use("/api/admin", adminRoutes);
 
 app.use((req, res) => {
     res.status(404).json({ message: "Not found" });
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     console.error(err);
     res.status(500).json({ message: "Server error" });
 });

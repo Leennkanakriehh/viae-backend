@@ -1,68 +1,51 @@
 const pool = require("../db");
 
-exports.createDriver = async (req, res) => {
+exports.applyDriver = async (req, res) => {
     try {
-        const { user_id, driver_code, username, phone } = req.body;
+        const { user_id, driver_code, name, phone } = req.body;
 
         const result = await pool.query(
-            'INSERT INTO drivers (user_id, driver_code, username, phone) VALUES ($1, $2, $3, $4) RETURNING *',
-            [user_id, driver_code, username, phone]
+            `INSERT INTO drivers (user_id, driver_code, name, phone, is_online)
+       VALUES ($1, $2, $3, $4, false)
+       RETURNING *`,
+            [user_id, driver_code, name, phone]
         );
-
         res.status(201).json(result.rows[0]);
 
     } catch (err) {
         console.error(err);
 
-        //  handling unique cases
         if (err.code === "23505") {
             return res.status(409).json({
-                error: "Driver already exists or code already used"
+                error: "User already has a driver application"
             });
         }
 
-        //// FOREIGN KEY violation (user_id not in users)
         if (err.code === "23503") {
             return res.status(400).json({
                 error: "User does not exist"
             });
         }
 
-        //NOT NULL violation
+        // NOT NULL 
         if (err.code === "23502") {
             return res.status(400).json({
                 error: "Missing required field"
             });
         }
 
-        // ❗ Invalid data type
-        if (err.code === "22P02") {
-            return res.status(400).json({
-                error: "Invalid data format"
-            });
-        }
-        //fallabck
-        res.status(500).json({
-            error: "internal server error"
-        });
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 //get all drivers
 exports.getDrivers = async (req, res) => {
     try {
-        const result = await pool.query(`SELECT 
-        d.id,
-            d.driver_code,
-            d.username,
-            d.phone,
-            d.is_online,
-            d.user_id,
-            u.email,
-            u.role
-      FROM drivers d
-      JOIN users u ON d.user_id = u.id
-      ORDER BY d.id`);
+        const result = await pool.query(`SELECT d.id, d.driver_code, d.username, d.phone, d.is_online, u.email
+    FROM drivers d
+    JOIN users u ON d.user_id = u.id
+    WHERE d.status = 'approved'
+    ORDER BY d.id;`
+        );
 
         res.json(result.rows);
     } catch (err) {
