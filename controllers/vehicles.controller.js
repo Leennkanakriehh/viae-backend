@@ -65,37 +65,36 @@ exports.getVehicles = async (req, res) => {
     }
 }
 
-//get by id 
-exports.getVehicleById = async (req, res) => {
-    try {
-        const { id } = req.params;
-        const result = pool.query('SELECT * FROM vehicles WHERE id = $1', [id]);
 
-        if ((await result).rowCount === 0) {
-            return res.json({ error: "Vehicle not found" });
-        }
 
-        return res.json((await result).rows[0]);
-    } catch {
-        console.error(err);
-        return res.json({ error: "Failed to fetch vehicle" });
-    }
-}
-
-//get vehicles by driver id
+// Fixed getVehicleByDriver
 exports.getVehicleByDriver = async (req, res) => {
     try {
         const { driver_id } = req.params;
+        const result = await pool.query("SELECT * FROM vehicles WHERE driver_id = $1", [driver_id]);
 
-        const result = pool.query("SELECT * FROM vehicles WHERE driver_id = $1", [driver_id]);
-
-        if ((await result).rows === 0) {
-            return res.status(404).json({ error: "No vehicle found for this driver" });
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "No vehicle found" });
         }
         return res.status(200).json(result.rows[0]);
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ error: "Failed to delete vehicle" });
+        return res.status(500).json({ error: "Server error" });
+    }
+}
+
+exports.getVehicleById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = await pool.query('SELECT * FROM vehicles WHERE id = $1', [id]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Vehicle not found" });
+        }
+        return res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Server error" });
     }
 }
 
@@ -105,7 +104,6 @@ exports.updateVehicle = async (req, res) => {
         const { id } = req.params;
         const { model, plate_number, color } = req.body;
 
-        //  chech vehicle exists
         const existing = await pool.query("SELECT * FROM vehicles WHERE id = $1", [id]);
 
         if (existing.rows.length === 0) {
@@ -159,4 +157,4 @@ exports.deleteVehicle = async (req, res) => {
         console.error(err);
         return res.status(500).json({ error: "Failed to delete vehicle" });
     }
-};
+}

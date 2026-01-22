@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const adminAuth = require("./middleware/adminAuth");
 
 const {
     createUser,
@@ -9,10 +10,10 @@ const {
     updateUserEmail,
 } = require("../controllers/users.controller");
 
-router.post("/", createUser);
-router.get("/", getUsers);
-router.get("/:id", getUserById)
-router.delete("/:id", deleteUser);
-router.put("/:id/email", updateUserEmail)
+router.post("/", adminAuth, createUser);
+router.get("/", adminAuth, getUsers);
+router.get("/:id", adminAuth, getUserById);
+router.delete("/:id", adminAuth, deleteUser);
+router.put("/:id/email", adminAuth, updateUserEmail);
 
 module.exports = router;

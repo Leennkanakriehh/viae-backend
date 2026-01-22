@@ -16,7 +16,7 @@ exports.getPendingDrivers = async (req, res) => {
       JOIN users u ON d.user_id = u.id
       WHERE d.status = 'pending'
       ORDER BY d.id DESC
-    `);
+    `)
 
         res.json(result.rows);
     } catch (err) {
@@ -70,7 +70,7 @@ exports.approveDriver = async (req, res) => {
     } finally {
         client.release();
     }
-};
+}
 
 
 
@@ -82,7 +82,7 @@ exports.rejectDriver = async (req, res) => {
         const result = await pool.query(
             "UPDATE drivers SET status = 'rejected' WHERE id = $1",
             [id]
-        );
+        )
 
         if (result.rowCount === 0) {
             return res.status(404).json({ error: "Driver not found" });

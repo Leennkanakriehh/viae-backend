@@ -1,13 +1,24 @@
 const express = require("express");
 const router = express.Router();
 
-const { createRide, getRides, assignDriverToRide, startRide, completeRide } = require("../controllers/rides.controller");
+const adminAuth = require("./middleware/adminAuth");
+const driverAuth = require("./middleware/driverAuth");
 
-router.post("/", createRide);
+const { createRide, getRides, assignDriverToRide, startRide, completeRide, getMyRideHistory } = require("../controllers/rides.controller");
+
+//admin only
+router.post("/", adminAuth, createRide);
+router.put("/:id/assign", adminAuth, assignDriverToRide);
+
+//shared
 router.get("/", getRides);
 
-router.put("/:id/assign", assignDriverToRide);
-router.put("/:id/start", startRide);
-router.put("/:id/complete", completeRide);
+//driver
+router.get("/my/history", driverAuth, getMyRideHistory);
+router.put("/:id/complete", driverAuth, completeRide);
+router.put("/:id/start", driverAuth, startRide);
+
+router.put("/:id/start", driverAuth, startRide);
+router.put("/:id/complete", driverAuth, completeRide);
 
 module.exports = router;
