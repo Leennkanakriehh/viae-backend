@@ -15,7 +15,6 @@ router.post("/signup", async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         }
 
-        // 1️⃣ create user
         const result = await db.query(
             "INSERT INTO users (email, password, role) VALUES ($1, $2, $3) RETURNING *",
             [email, password, role]
@@ -23,10 +22,9 @@ router.post("/signup", async (req, res) => {
 
         const user = result.rows[0];
 
-        // 2️⃣ if driver → create pending driver record
         if (role === "driver") {
             const driverCode = `DRV-${user.id}`;
-            const username = email.split("@")[0]; // ✅ auto username
+            const username = email.split("@")[0];
 
             await db.query(
                 `INSERT INTO drivers (user_id, driver_code, username, status, is_online)
