@@ -1,6 +1,6 @@
-# 🧠 Viae Backend (Node.js + Express + PostgreSQL)
+# Viae Backend (Node.js + Express + PostgreSQL)
 
-## 📌 Description
+## Description
 
 This is the backend for the Viae full-stack fleet management system.  
 It provides RESTful APIs for authentication, user management, driver operations, ride management, vehicle management, and administrative workflows.
@@ -9,7 +9,7 @@ The backend is responsible for enforcing role-based access control, handling bus
 
 ---
 
-## 🛠 Tech Stack
+## Tech Stack
 
 - **Node.js** – JavaScript runtime environment
 - **Express.js** – Backend web framework for building RESTful APIs
@@ -18,9 +18,9 @@ The backend is responsible for enforcing role-based access control, handling bus
 - **dotenv** – Environment variable management
 - **cors** – Cross-Origin Resource Sharing middleware
 
----
-## 🔌 API Endpoints
 
+## API Endpoints
+```
 The backend exposes a set of RESTful API endpoints to handle authentication, user management, driver operations, ride management, vehicle management, and administrative actions.  
 Access to endpoints is controlled using role-based middleware (`adminAuth` and `driverAuth`).
 
@@ -30,7 +30,7 @@ The API runs locally at:
 
 ---
 
-### 🔐 Authentication Routes
+### Authentication Routes
 
 **Base URL:** `/api/auth`
 
@@ -77,7 +77,7 @@ The API runs locally at:
 
 ---
 
-### 🚕 Ride Routes
+### Ride Routes
 
 **Base URL:** `/api/rides`
 
@@ -104,7 +104,7 @@ The API runs locally at:
 
 ---
 
-### 👥 User Management Routes
+### User Management Routes
 
 **Base URL:** `/api/users`  
 **Access:** Admin only
@@ -119,7 +119,7 @@ The API runs locally at:
 
 ---
 
-### 🚙 Vehicle Routes
+### Vehicle Routes
 
 **Base URL:** `/api/vehicles`
 
@@ -141,18 +141,22 @@ The API runs locally at:
 
 ---
 
-### 🔒 Authorization & Middleware
+### Authorization & Middleware
 
 - **Admin-only routes** are protected using `adminAuth` middleware.
 - **Driver-only routes** are protected using `driverAuth` middleware.
 - Authorization is role-based and enforced through request headers.
 
 
-## 🚀 Getting Started
-
+## Getting Started
+```
 Follow the steps below to run the backend server locally.
 
-### 1️⃣ Install dependencies
-```bash
+### Install dependencies
+bash
 cd viae-backend
 npm install
+```
+
+
+
